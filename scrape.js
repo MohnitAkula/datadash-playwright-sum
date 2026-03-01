@@ -6,23 +6,16 @@ const { chromium } = require('playwright');
 
   let grandTotal = 0;
 
-  // 🔹 If seeds are clickable links on a page, set that page URL here:
-  const mainPage = "https://sanand0.github.io/tdsdata/";
+  // Get URLs from command line
+  const seedLinks = process.argv.slice(2);
 
-  await page.goto(mainPage, { waitUntil: "load" });
-
-  // Find Seed 64–73 links
-  const seedLinks = await page.$$eval("a", links =>
-    links
-      .filter(a => a.innerText.match(/Seed\s*(6[4-9]|7[0-3])/))
-      .map(a => a.href)
-  );
-
-  console.log("Found seed links:", seedLinks);
+  if (seedLinks.length === 0) {
+    console.error("No URLs provided.");
+    process.exit(1);
+  }
 
   for (const link of seedLinks) {
     console.log(`Visiting: ${link}`);
-
     await page.goto(link, { waitUntil: "load" });
 
     const numbers = await page.$$eval("table td", cells =>
@@ -38,6 +31,11 @@ const { chromium } = require('playwright');
   }
 
   console.log("=================================");
+  console.log("FINAL TOTAL SUM:", grandTotal);
+  console.log("=================================");
+
+  await browser.close();
+})();
   console.log("FINAL TOTAL SUM:", grandTotal);
   console.log("=================================");
 
