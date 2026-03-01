@@ -4,15 +4,10 @@ const { chromium } = require('playwright');
   const browser = await chromium.launch({ headless: true });
   const page = await browser.newPage();
 
+  const label = process.argv[2]; // e.g., "PROBLEM_1"
+  const seedLinks = process.argv.slice(3);
+
   let grandTotal = 0;
-
-  // Get URLs from command line
-  const seedLinks = process.argv.slice(2);
-
-  if (seedLinks.length === 0) {
-    console.error("No URLs provided.");
-    process.exit(1);
-  }
 
   for (const link of seedLinks) {
     console.log(`Visiting: ${link}`);
@@ -31,13 +26,9 @@ const { chromium } = require('playwright');
   }
 
   console.log("=================================");
-  console.log("FINAL TOTAL SUM:", grandTotal);
+  console.log(`${label} TOTAL: ${grandTotal}`);
   console.log("=================================");
 
   await browser.close();
 })();
-  console.log("FINAL TOTAL SUM:", grandTotal);
-  console.log("=================================");
-
-  await browser.close();
 })();
